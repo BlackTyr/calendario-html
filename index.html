@@ -1,0 +1,1069 @@
+<!DOCTYPE html>   
+
+<html lang="es">   
+
+<head>   
+
+    <meta charset="UTF-8">   
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+
+    <title>Calendario de Turnos - Año 2025</title>   
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">   
+
+    <style>   
+
+        body {   
+
+            font-family: 'Roboto', sans-serif;   
+
+            margin: 20px;   
+
+            background-color: #f4f4f4;   
+
+        }   
+
+  
+
+        table {   
+
+            border-collapse: collapse;   
+
+            width: 100%;   
+
+            margin-bottom: 20px;   
+
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);   
+
+        }   
+
+  
+
+        th, td {   
+
+            border: 1px solid #ddd;   
+
+            padding: 12px;   
+
+            text-align: center;   
+
+        }   
+
+  
+
+        th {   
+
+            background-color: #4CAF50;   
+
+            color: white;   
+
+        }   
+
+  
+
+        .trabajo {   
+
+            background-color: #008080; /* Verde para trabajo */   
+
+        }   
+
+  
+
+        .descanso {   
+
+            background-color: #FF2400; /* Rojo para descanso */   
+
+        }   
+
+  
+
+        .noche {   
+
+            background-color: #A9A9A9; /* Azul para trabajo nocturno */   
+
+        }   
+
+  
+
+        .incapacidad {   
+
+            background-color: #B0C4DE; /* Color naranja para vacaciones */   
+
+        }      
+
+  
+
+        .seleccionado {   
+
+            background-color: #9966CC; /* Color naranja para vacaciones */   
+
+        }      
+
+  
+
+        .cubrir {   
+
+           background-color: #FF7F00; /* Color violeta claro para cubrir turno */   
+
+        }     
+
+  
+
+        .tiempoextra {   
+
+           background-color: #FFDB58; /* Color amarillo para tiempo extra */   
+
+        }     
+
+  
+
+        tr:hover {   
+
+            background-color: rgba(224, 224, 224, 0.5); /* Color gris claro con transparencia */   
+
+        }   
+
+  
+
+        .analista {   
+
+            background-color: transparent; /* Sin color de fondo */   
+
+        }   
+
+  
+
+    </style>   
+
+</head>   
+
+<body>   
+
+            <tr> 
+
+                <td id="turno" class="normal">Haz clic aquí</td> 
+
+            </tr> 
+
+             
+
+<h1>Calendario de Turnos - ASCENTY DC MX1</h1>   
+
+<label for="analista-select">Filtrar por analista:</label>  
+
+<select id="analista-select">  
+
+  
+
+    <option value="todos">Todos</option>  
+
+    <option value="Oscar Cervantes">Oscar Cervantes</option>  
+
+    <option value="Alexis Mejia">Alexis Mejia</option>  
+
+    <option value="Jorge Cisneros">Jorge Cisneros</option>  
+
+    <option value="Efrain Carmona">Efrain Carmona</option>  
+
+    <option value="Victor Prado">Victor Prado</option>  
+
+    <option value="Jacinto Trejo">Jacinto Trejo</option>  
+
+    <option value="Juan Carlos Zarate">Juan Carlos Zarate</option>  
+
+    <option value="Alejandro Tellez">Alejandro Tellez</option>  
+
+    <option value="Moises Hernandez">Moises Hernandez</option>  
+
+  
+
+</select>  
+
+<button id="export-btn">Exportar a CSV</button>  
+
+<script>   
+
+  
+
+    const meses = [   
+
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",   
+
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"   
+
+    ];   
+
+  
+
+    const diasNumerosPorMes = [  
+
+        Array.from({length: 31}, (_, i) => i + 1), // Enero  
+
+        Array.from({length: 28}, (_, i) => i + 1), // Febrero  
+
+        Array.from({length: 31}, (_, i) => i + 1), // Marzo  
+
+        Array.from({length: 30}, (_, i) => i + 1), // Abril  
+
+        Array.from({length: 31}, (_, i) => i + 1), // Mayo  
+
+        Array.from({length: 30}, (_, i) => i + 1), // Junio  
+
+        Array.from({length: 31}, (_, i) => i + 1), // Julio  
+
+        Array.from({length: 31}, (_, i) => i + 1), // Agosto  
+
+        Array.from({length: 30}, (_, i) => i + 1), // Septiembre  
+
+        Array.from({length: 31}, (_, i) => i + 1), // Octubre  
+
+        Array.from({length: 30}, (_, i) => i + 1), // Noviembre  
+
+        Array.from({length: 31}, (_, i) => i + 1)  // Diciembre  
+
+    ];  
+
+  
+
+  
+
+const diasPorMes = [  
+
+   
+
+    // Enero (31 días)  
+
+    ["Día", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles"], // 31 días  
+
+  
+
+    // Febrero (28 días)  
+
+    ["Día", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",  
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",  
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",  
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes"], // 28 días  
+
+  
+
+    // Marzo (31 días)  
+
+    ["Día", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",  
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",  
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",  
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",   
+
+     "Sabado", "Domingo", "Lunes"], // 31 días  
+
+  
+
+    // Abril (30 días)  
+
+    ["Día", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",  
+
+     "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",  
+
+     "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",  
+
+     "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",  
+
+     "Martes", "Miercoles"], // 30 días  
+
+  
+
+    // Mayo (31 días)  
+
+    ["Día", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles",  
+
+     "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles",   
+
+     "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles",   
+
+     "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles",  
+
+     "Jueves", "Viernes", "Sabado"], // 31 días  
+
+  
+
+    // Junio (30 días)  
+
+    ["Dia", "Domingo", "Lunes", "Marte", "Miercoles", "Jueves", "Viernes", "Sabado",  
+
+     "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado",  
+
+     "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado",  
+
+     "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado",  
+
+     "Domingo", "Lunes"], // 30 días  
+
+  
+
+    // Julio (31 días)  
+
+    ["Día", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",  
+
+     "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",  
+
+     "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",   
+
+     "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes",  
+
+     "Martes", "Miercoles", "Jueves"], // 31 días  
+
+  
+
+    // Agosto (31 días)  
+
+    ["Día", "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves",  
+
+     "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves",  
+
+     "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves",  
+
+     "Viernes", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves",  
+
+     "Viernes", "Sabado", "Domingo"], // 31 días  
+
+  
+
+    // Septiembre (30 días)  
+
+    ["Día", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes"], // 30 días  
+
+  
+
+    // Octubre (31 días)  
+
+    ["Día", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes",  
+
+     "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes",  
+
+     "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes",  
+
+     "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Lunes", "Martes",  
+
+     "Miércoles", "Jueves", "Viernes"], // 31 días  
+
+  
+
+    // Noviembre (30 días)  
+
+    ["Día", "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",   
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",   
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",  
+
+     "Sábado", "Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes",  
+
+     "Sabado", "Domingo"], // 30 días  
+
+  
+
+    // Diciembre (31 días)  
+
+    ["Día", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",  
+
+     "Lunes", "Martes", "Miércoles"], // 31 días  
+
+];  
+
+  
+
+  
+
+    const turnosEjemplo = [   
+
+  
+
+      // Enero  
+
+        ["trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso"],   
+
+  
+
+      // Febrero  
+
+        ["descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso"],   
+
+  
+
+      // Marzo   
+
+        ["descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo"],   
+
+  
+
+      // Abril   
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Mayo    
+
+         ["trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso"],   
+
+  
+
+      // Junio   
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Julio    
+
+         ["trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso"],   
+
+  
+
+      // Agosto    
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "trabajo"],   
+
+  
+
+      // Septiembre    
+
+         ["trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso"],   
+
+  
+
+      // Octubre  
+
+         ["descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche"],   
+
+  
+
+      // Noviembre  
+
+         ["descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Diciembre  
+
+         ["noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso"],   
+
+    ];   
+
+  
+
+  
+
+    const turnosEjemplo2 = [   
+
+  
+
+      // Enero  
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Febrero  
+
+       ["descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Marzo   
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Abril   
+
+       ["descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Mayo    
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Junio   
+
+        ["descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Julio    
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Agosto    
+
+       ["descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Septiembre    
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Octubre  
+
+  
+
+        ["descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Noviembre  
+
+        ["descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso", "noche", "noche", "descanso", "descanso"],   
+
+  
+
+      // Diciembre  
+
+       ["descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "descanso", "descanso"],   
+
+    ];   
+
+  
+
+  
+
+    const turnosEjemplo3 = [   
+
+  
+
+      // Enero  
+
+        ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Febrero  
+
+        ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Marzo   
+
+        ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Abril   
+
+       ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Mayo    
+
+        ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Junio   
+
+       ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Julio    
+
+      ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Agosto    
+
+       ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Septiembre    
+
+       ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Octubre  
+
+        ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Noviembre  
+
+       ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+  
+
+      // Diciembre  
+
+      ["trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso", "trabajo", "trabajo", "trabajo", "trabajo", "trabajo", "descanso", "descanso"],   
+
+    ];   
+
+  
+
+   
+
+    document.addEventListener('DOMContentLoaded', function() {   
+
+        const container = document.createElement('div');   
+
+        meses.forEach((mes, index) => {   
+
+            const h2 = document.createElement('h2');   
+
+            h2.textContent = mes + " 2025";   
+
+            container.appendChild(h2);   
+
+  
+
+            const table = document.createElement('table');   
+
+            const thead = document.createElement('thead');   
+
+            const tbody = document.createElement('tbody');   
+
+  
+
+            const headers = diasPorMes[index];   
+
+            const headerRow = document.createElement('tr');   
+
+  
+
+            headers.forEach((header) => {   
+
+                const th = document.createElement('th');   
+
+                th.scope = "col";   
+
+                th.textContent = header; // Mostrar el nombre del día sin input   
+
+                headerRow.appendChild(th);   
+
+            });   
+
+            thead.appendChild(headerRow);   
+
+  
+
+            const dayHeaderRow = document.createElement('tr');   
+
+            for (let i = 0; i < 32;  i++) {   
+
+                const th = document.createElement('th');   
+
+                th.textContent = i === 0 ? "Analista" : i;   
+
+                dayHeaderRow.appendChild(th);   
+
+            }   
+
+  
+
+            thead.appendChild(dayHeaderRow);   
+
+            const analistas = [   
+
+                { nombre: "Oscar Cervantes", turnos: turnosEjemplo[index] },   
+
+                { nombre: "Alexis Mejia", turnos: turnosEjemplo[index] },   
+
+                { nombre: "Jorge Cisneros", turnos: turnosEjemplo[index] },   
+
+                { nombre: "Efrain Carmona", turnos: turnosEjemplo[index] },   
+
+                { nombre: "Victor Prado", turnos: turnosEjemplo[index] },   
+
+                { nombre: "Jacinto Trejo", turnos: turnosEjemplo[index] },   
+
+                { nombre: "Juan Carlos Zarate", turnos: turnosEjemplo[index] },   
+
+                { nombre: "Alejandro Tellez", turnos: turnosEjemplo[index] },  
+
+                { nombre: "Moises Hernandez", turnos: turnosEjemplo3[index] }  
+
+                ];   
+
+  
+
+            analistas.forEach(analista => {   
+
+                const row = document.createElement('tr');   
+
+                const analistaCell = document.createElement('td');   
+
+                analistaCell.textContent = analista.nombre;   
+
+                analistaCell.className = "analista"; // Clase para mantener el color transparente   
+
+                row.appendChild(analistaCell);   
+
+  
+
+                analista.turnos.forEach(turno => {   
+
+                    const td = document.createElement('td');   
+
+                    td.className = turno === "noche" ? "noche" : (turno === "descanso" ? "descanso" : "trabajo");   
+
+                    row.appendChild(td);   
+
+                });   
+
+                tbody.appendChild(row);   
+
+  
+
+  
+
+                // Agregar una fila adicional para cada analista   
+
+                const filaAdicional = document.createElement('tr');   
+
+                analista.turnos.forEach(() => {   
+
+                    const td = document.createElement('td');   
+
+                    td.textContent = ""; // Puedes dejarlo vacío o agregar algún valor predeterminado   
+
+                    filaAdicional.appendChild(td);   
+
+                });   
+
+                tbody.appendChild(filaAdicional);   
+
+  
+
+  
+
+                // Agregar una fila vacía que une todas las celdas   
+
+                const filaEspacio = document.createElement('tr');   
+
+                const tdEspacio = document.createElement('td');   
+
+                tdEspacio.colSpan = 9; // Une todas las celdas   
+
+                tdEspacio.textContent = ""; // Mantener en blanco   
+
+                filaEspacio.appendChild(tdEspacio);   
+
+                tbody.appendChild(filaEspacio);   
+
+            });   
+
+  
+
+            table.appendChild(thead);   
+
+            table.appendChild(tbody);   
+
+            container.appendChild(table);   
+
+        });   
+
+  
+
+  
+
+        document.body.appendChild(container);   
+
+        const turnos = document.querySelectorAll('td');   
+
+        turnos.forEach(turno => {   
+
+            if (turno.parentElement.rowIndex % 3 === 0 && turno.cellIndex > 0) { // Ignorar la celda del nombre del analista   
+
+   
+
+   
+
+// Inicializar el contenido de la celda 
+
+function inicializarContenido(turno) { 
+
+    if (turno.classList.contains('cubrir')) { 
+
+        turno.textContent = "Cubrir"; // Texto para estado 1 
+
+    } else if (turno.classList.contains('tiempoextra')) { 
+
+        turno.textContent = "Tiempo Extra"; // Texto para estado 2 
+
+    } else if (turno.classList.contains('seleccionado')) { 
+
+        turno.textContent = "Vacaciones"; // Texto para estado 3 
+
+    } else if (turno.classList.contains('incapacidad')) { 
+
+        turno.textContent = "Incapacidad"; // Texto para estado 4 
+
+    } else { 
+
+        turno.classList.add('normal'); // Clase inicial 
+
+        turno.textContent = ""; // Texto vacío para el estado inicial 
+
+    } 
+
+} 
+
+  
+
+let nombreIngresado = ""; // Variable para almacenar el nombre 
+
+  
+
+turno.addEventListener('click', function() {   
+
+    if (this.classList.contains('cubrir')) {   
+
+        this.classList.remove('cubrir');  
+
+        this.classList.add('tiempoextra');  
+
+        this.textContent = "Tiempo Extra";  
+
+    } else if (this.classList.contains('tiempoextra')) {   
+
+        this.classList.remove('tiempoextra');   
+
+        this.classList.add('seleccionado');  
+
+        this.textContent = "Vacaciones";   
+
+    } else if (this.classList.contains('seleccionado')) { 
+
+        this.classList.remove('seleccionado');   
+
+        this.classList.add('incapacidad');  
+
+        this.textContent = "Incapacidad";   
+
+    } else if (this.classList.contains('incapacidad')) { 
+
+        this.classList.remove('incapacidad');   
+
+        this.classList.add('normal');  
+
+        this.textContent = "";   
+
+    } else {   
+
+        this.classList.remove('normal');   
+
+        this.classList.add('cubrir');  
+
+        this.textContent = `Cubrir ${nombreIngresado}`;  
+
+    } 
+
+  
+
+    // Agregar un input para el nombre cuando está en estado "normal" 
+
+    if (this.classList.contains('normal')) { 
+
+        if (!this.querySelector('input')) { 
+
+            const input = document.createElement('input'); 
+
+            input.type = 'text'; 
+
+            input.placeholder = 'Ingresa tu nombre'; 
+
+            input.value = nombreIngresado;  
+
+            this.appendChild(input);  
+
+  
+
+            input.addEventListener('input', function() { 
+
+                nombreIngresado = this.value;  
+
+            }); 
+
+        } 
+
+    } 
+
+}); 
+
+  
+
+// Funcionalidad de reinicio 
+
+let clickCount = 0; // Contador de clics para reinicio 
+
+  
+
+turno.addEventListener('dblclick', function() { 
+
+    clickCount++; 
+
+    if (clickCount === 2) { 
+
+        // Reiniciar estados 
+
+        this.className = ''; // Limpiar todas las clases 
+
+        this.textContent = ''; // Limpiar el texto 
+
+        nombreIngresado = ''; // Limpiar el nombre ingresado 
+
+  
+
+        // Eliminar el input si existe 
+
+        const input = this.querySelector('input'); 
+
+        if (input) { 
+
+            this.removeChild(input); 
+
+        } 
+
+  
+
+        clickCount = 0; // Reiniciar el contador 
+
+    } 
+
+}); 
+
+                turno.addEventListener('keydown', function(event) {   
+
+                    if (event.key === 'Enter' || event.key === ' ')  {   
+
+                    }   
+
+                });   
+
+            }   
+
+        });   
+
+  
+
+   
+
+        // Funcionalidad para exportar a CSV  
+
+        document.getElementById('export-btn').addEventListener('click', function() {  
+
+            const rows = document.querySelectorAll('table tr');  
+
+            const csvContent = [];  
+
+            rows.forEach(row => {  
+
+                const cols = row.querySelectorAll('td, th');  
+
+                const rowData = Array.from(cols).map(col => col.textContent).join(',');  
+
+                csvContent.push(rowData);  
+
+            });  
+
+  
+
+            const csvBlob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });  
+
+            const csvUrl = URL.createObjectURL(csvBlob);  
+
+            const link = document.createElement('a');  
+
+            link.setAttribute('href', csvUrl);  
+
+            link.setAttribute('download', 'calendario_turnos.csv');  
+
+            link.style.visibility = 'hidden';  
+
+            document.body.appendChild(link);  
+
+            link.click();  
+
+            document.body.removeChild(link);  
+
+        });  
+
+  
+
+  
+
+        // Filtrar por analista  
+
+        document.getElementById('analista-select').addEventListener('change', function() {  
+
+            const selectedAnalista = this.value;  
+
+            const rows = document.querySelectorAll('table tbody tr');  
+
+            rows.forEach(row => {  
+
+                const analistaName = row.querySelector('td').textContent; // Obtener el nombre del analista  
+
+                if (selectedAnalista === 'todos' || analistaName === selectedAnalista) {  
+
+                    row.style.display = ''; // Mostrar la fila  
+
+                } else {  
+
+                    row.style.display = 'none'; // Ocultar la fila  
+
+                }  
+
+            });  
+
+        });  
+
+    });   
+
+</script>   
+
+</body>   
+
+</html> 
